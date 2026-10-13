@@ -32,7 +32,7 @@ Objetivo: desplegar Oracle Database 23ai Free, PostgreSQL y MariaDB en una máqu
 ### Preparar Podman y descargar la imagen
 #### Actualizar Lista interna de los repositorios
 
-Primero tenemos que actulizar la lista de paquetes disponibles en internet:[][]
+Primero tenemos que actulizar la lista de paquetes disponibles en internet:
 ```bash
 sudo apt update
 ```
@@ -40,29 +40,79 @@ sudo apt update
 #### Instalar Podman
 
 Podman es una herramienta que permite crear y ejecutar contenedores.
-Para instalarlo tenemos que ejecutar el siguiente comando:[][]
+Para instalarlo tenemos que ejecutar el siguiente comando:
 ```bash
 sudo apt install podman
 ```
 
-Puedes verificar si se a instalado correctamente ejecutando este comando:[][]
+Puedes verificar si se a instalado correctamente ejecutando este comando:
 ```bash
 podman --version
 ```
 > si el comando devuelve la version de podman, la instalacion esta bien echa.
 #### Descargar la imagen de Oracle Database 23ai Free
 
-Para instalar la imagen de **Oracle Database 23ai** desde la pagina de contenedores de oracle, ejecuta este comando:[][]
+Para instalar la imagen de **Oracle Database 23ai** desde la pagina de contenedores de oracle, ejecuta este comando:
 ```bash
 sudo podman pull container-registry.oracle.com/database/free:23.5.0.0
 ```
 
-Si la instalacion a terminado sin errores, podras verificar que se a descargado correctamente con el siguiente comando:[][]
+Si la instalacion a terminado sin errores, podras verificar que se a descargado correctamente con el siguiente comando:
 ```bash
 sudo podman images
 ```
 > si el comando devuelve una tabla con datos de la imagen, significa que esta correctamente descargada.
 
+### Crear y comprobar el contenedor
 
+Ahora vamos a crear un volumen para guardar los datos de oracle de forma persistente y vamos . 
+
+#### Crear el volumen
+
+Para crear el volumen ejecuta este comando:
+```bash
+sudo podman volume create oracle_23ai_datos
+```
+
+#### Crear y ejecutar el contenedor de Oracle
+
+Para ello ejecuta este comando:
+```bash
+sudo podman run -d --name cont-oracle -p 1521:1521 --restart=always -v oracle_23ai_datos:/opt/oracle/oradata:U container-registry.oracle.com/database/free:23.5.0.0
+```
+
+- `podman run`: Crea un contenedor nuevo a partir de la imagen y lo inicia.
+
+- `-d`: Hace que el contenedor se ejecute en segundo plano, sin dejar la terminal ocupada.
+
+- `--name cont-oracle`: Asigna al contenedor el nombre `cont-oracle` para poder identificarlo y gestionarlo fácilmente.
+
+- `-p 1521:1521`: Conecta el puerto 1521 de la máquina virtual con el puerto 1521 del contenedor, permitiendo las conexiones a Oracle.
+
+- `--restart=always`: Configura el contenedor para que intente iniciarse automáticamente cuando sea necesario.
+
+- `-v oracle_23ai_datos:/opt/oracle/oradata:U`: Conecta el volumen `oracle_23ai_datos` con la carpeta donde Oracle guarda sus datos, permitiendo conservarlos aunque el contenedor se elimine o se vuelva a crear.
+
+- `container-registry.oracle.com/database/free:23.5.0.0`: Indica la imagen de Oracle Database 23ai Free que Podman utilizará para crear el contenedor.
+
+#### Comprobar el contenedor
+
+Para comprobar que el contenedor de Oracle está funcionando:
+
+```bash
+sudo podman ps
+```
+
+Para ver todos los contenedores, incluso los detenidos:
+```bash
+sudo podman ps -a
+```
+
+Para revisar el inicio de Oracle y posibles errores:
+```bash
+sudo podman logs cont-oracle
+```
+
+> Los registros permiten comprobar el estado de inicio de Oracle y, según la configuración de la imagen, pueden mostrar la contraseña de administración generada automáticamente.
 
 
