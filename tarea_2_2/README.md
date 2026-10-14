@@ -47,10 +47,16 @@ También crearemos las bases de datos y usuarios indicados, comprobaremos que po
 Para Oracle utilizamos la siguiente imagen:
 
 ```text
+container-registry.oracle.com/database/free:23.5.0.24.07
+```
+
+Para desplegar Oracle utilizamos la siguiente imagen:
+
+```text
 container-registry.oracle.com/database/free:23.5.0.0
 ```
 
-Por lo tanto, utilizaremos Oracle Database 23ai Free con la imagen `23.5.0.0`.
+> `23.5.0.24.07` es la versión que está ejecutando Oracle y `23.5.0.0` es la versión de la imagen utilizada para crear el contenedor.
 
 #### PostgreSQL
 
