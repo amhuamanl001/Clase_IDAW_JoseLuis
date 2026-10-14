@@ -122,6 +122,14 @@ sudo podman exec -it cont-oracle /bin/bash
 ```
 > si en la terminal aparece **bash-4.4$**, estas dentro de la terminal en podman.
 
+- `podman exec`: Ejecuta un comando dentro de un contenedor que ya está en funcionamiento.
+
+- `-it`: Permite usar la terminal de forma interactiva.
+
+- `cont-oracle`: Indica el nombre del contenedor donde se ejecutará el comando.
+
+- `/bin/bash`: Abre una terminal Bash dentro del contenedor para poder ejecutar comandos directamente en su entorno.
+
 Para salir de esa terminal simplemente ejecutamos:
 ```bash
 exit
@@ -131,5 +139,24 @@ Ahora que ya sabemos como abrir una terminal en podmad, la volveremos abrir pero
 ```bash
 sudo podman exec -it cont-oracle sqlplus / as sysdba
 ```
+> si te sale en la terminal SQL> el comando a funcionado.
+
+- `sqlplus`: Abre la herramienta de consola SQL`*`Plus de Oracle.
+
+- `/`: Permite conectarse usando la autenticación interna del sistema, sin introducir usuario y contraseña.
+
+- `as sysdba`: Inicia la conexión con privilegios de administrador de la base de datos.
+
+Ahora tenemos que comprobar las PDB existentes. y verificar que `FREEPDB1` está disponible. Para ello, ejecutamos:
+```bash
+SHOW PDBS
+```
+##### Tabla de ejemplo de PDB
+
+| CON_ID | CON_NAME | OPEN MODE | RESTRICTED |
+|---:|---|---|---|
+| 2 | PDB$SEED | READ ONLY | NO |
+| 3 | FREEPDB1 | READ WRITE | NO |
+
 
 
