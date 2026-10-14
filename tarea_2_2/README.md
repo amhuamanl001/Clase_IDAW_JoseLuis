@@ -32,15 +32,14 @@ Objetivo: desplegar Oracle Database 23ai Free, PostgreSQL y MariaDB en una máqu
 ### Preparar Podman y descargar la imagen
 #### Actualizar Lista interna de los repositorios
 
-Primero tenemos que actulizar la lista de paquetes disponibles en internet:
+Primero tenemos que actualizar la lista de paquetes disponibles en internet. Para ello, ejecutamos:
 ```bash
 sudo apt update
 ```
 
 #### Instalar Podman
 
-Podman es una herramienta que permite crear y ejecutar contenedores.
-Para instalarlo tenemos que ejecutar el siguiente comando:
+Podman es una herramienta que permite crear y ejecutar contenedores. Para instalarlo ejecutamos:
 ```bash
 sudo apt install podman
 ```
@@ -52,7 +51,7 @@ podman --version
 > si el comando devuelve la version de podman, la instalacion esta bien echa.
 #### Descargar la imagen de Oracle Database 23ai Free
 
-Para instalar la imagen de **Oracle Database 23ai** desde la pagina de contenedores de oracle, ejecuta este comando:
+Para instalar la imagen de **Oracle Database 23ai** desde la pagina de contenedores de oracle, ejecutamos esto:
 ```bash
 sudo podman pull container-registry.oracle.com/database/free:23.5.0.0
 ```
@@ -69,14 +68,14 @@ Ahora vamos a crear un volumen para guardar los datos de oracle de forma persist
 
 #### Crear el volumen
 
-Para crear el volumen ejecuta este comando:
+Para crear el volumen ejecutamos:
 ```bash
 sudo podman volume create oracle_23ai_datos
 ```
 
 #### Crear y ejecutar el contenedor de Oracle
 
-Para ello ejecuta este comando:
+Para ello, ejecutamos
 ```bash
 sudo podman run -d --name cont-oracle -p 1521:1521 --restart=always -v oracle_23ai_datos:/opt/oracle/oradata:U container-registry.oracle.com/database/free:23.5.0.0
 ```
@@ -114,5 +113,23 @@ sudo podman logs cont-oracle
 ```
 
 > Los registros permiten comprobar el estado de inicio de Oracle y, según la configuración de la imagen, pueden mostrar la contraseña de administración generada automáticamente.
+
+### Entrar en Oracle y crear el usuario de trabajo
+
+Ahora entraremos en el contenedor de podman y abriremos una terminal interactiva dentro de él. Para ello, ejecutamos:
+```bash
+sudo podman exec -it cont-oracle /bin/bash
+```
+> si en la terminal aparece **bash-4.4$**, estas dentro de la terminal en podman.
+
+Para salir de esa terminal simplemente ejecutamos:
+```bash
+exit
+```
+
+Ahora que ya sabemos como abrir una terminal en podmad, la volveremos abrir pero ahora para abrir SQL`*`Plus y conectarnos a la base de datos como administradores.
+```bash
+sudo podman exec -it cont-oracle sqlplus / as sysdba
+```
 
 
